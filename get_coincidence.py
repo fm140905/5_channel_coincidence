@@ -76,9 +76,10 @@ def get_coincidence(lst):
 if __name__ == '__main__':
     ################################################################
     #### Change the following parameters if needed ####
-    input_dir = "test/testdata"
-    output_dir = "test"
-    TIME_WINDOW = 500 # ns
+    input_dir = "/media/ming/Elements/1m_Cf252center_10MAY24_550LSB_CFD_run2/RAW/"
+    H5_file_name_pattern = "DataR_CH_channel_number_@DT5730S_30718_1m_Cf252center_10MAY24_CFD_run2.h5"
+    output_dir = input_dir
+    TIME_WINDOW = 30 # ns
     PH_THRESHOLD = 0.05 # V
     ################################################################
 
@@ -87,7 +88,7 @@ if __name__ == '__main__':
     pulse_heights = [] # V
     voltage_pulses = [] # V
     for i in range(5):
-        with h5py.File(input_dir + f"/DataR_CH{i}@DT5730S_30718_run4.h5", "r") as f:
+        with h5py.File(input_dir + H5_file_name_pattern.replace("_channel_number_", str(i)), "r") as f:
             tmp = f["time_stamps"][:]
             # print shape
             print(f"{tmp.shape[0]} pulses are found in CH{i}")
