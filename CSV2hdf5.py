@@ -11,7 +11,7 @@ if __name__ == '__main__':
     PH_THRESHOLD = 0.05 # V, discard pulses with height less than this value
     POLARITY = 1
     DC_OFFSET = 0.2
-    VMAX = 2.0
+    VMAX = 2.0 # V
     ################################################################
 
     NBITS = 14

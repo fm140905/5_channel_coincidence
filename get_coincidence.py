@@ -125,7 +125,7 @@ if __name__ == '__main__':
     
     # save to h5 file
     with h5py.File(output_dir + "/coincidences.h5", "w") as f:
-        f.create_dataset("timestamps", data=conicident_events_timestamps)
+        f.create_dataset("time_stamps", data=conicident_events_timestamps)
         f.create_dataset("pulse_heights", data=coincident_event_pulse_heights)
         f.create_dataset("voltage_pulses", data=coincident_event_voltage_pulses)
         f.create_dataset("pulse_integrals", data=coincident_event_pulse_integrals)
