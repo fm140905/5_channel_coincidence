@@ -1,9 +1,15 @@
+% Change these two parameters when necessary
+input_dir = "test/testdata"
+output_dir = "test"
+TIME_WINDOW = 500; % ns
+PH_THRESHOLD = 0.05; % V
+
 % CoMPASS CSV files are pre-processed and saved as hdf5 files 
 % read data from h5 files
 % each h5 file contains a 2D array with two columns: timestamp (ns) and pulse height (V)
 timestamp_pulseheights = cell(1, 5);
 for i = 1:5
-    filename = sprintf('input/timestamp_pulseheight_CH%d_10k.h5', i-1);
+    filename = [input_dir, sprintf('timestamp_pulseheight_CH%d_10k.h5', i-1)];
     info = h5info(filename);
     dataset = info.Datasets(1);
     tmp = h5read(filename, '/timestamp_pulseheight');
@@ -23,9 +29,6 @@ time_stamps = [events.time];
 events = events(sortIdx);
 
 % Find the coincidence
-% Change these two parameters when necessary
-TIME_WINDOW = 500; % ns
-PH_THRESHOLD = 0.05; % V
 coincidences = get_coincidence(events, TIME_WINDOW, PH_THRESHOLD);
 disp(['Number of coincidences found: ', num2str(length(coincidences))]);
 

@@ -1,4 +1,5 @@
 import h5py
+import numpy as np
 
 
 ## custom data type with fields: time stamp, channel number, pulse index, pulse height
@@ -73,32 +74,59 @@ def get_coincidence(lst):
 
 
 if __name__ == '__main__':
+    ################################################################
+    #### Change the following parameters if needed ####
+    input_dir = "test/testdata"
+    output_dir = "test"
+    TIME_WINDOW = 500 # ns
+    PH_THRESHOLD = 0.05 # V
+    ################################################################
+
     # read data from h5 files
-    # each file contains a 2D array with two columns: timestamp (ns) and pulse height (V)
-    timestamp_pulseheights = []
+    timestamps = [] # ns
+    pulse_heights = [] # V
+    voltage_pulses = [] # V
     for i in range(5):
-        with h5py.File(f"input/timestamp_pulseheight_CH{i}.h5", "r") as f:
-            tmp = f["timestamp_pulseheight"][:]
+        with h5py.File(input_dir + f"/DataR_CH{i}@DT5730S_30718_run4.h5", "r") as f:
+            tmp = f["time_stamps"][:]
             # print shape
             print(f"{tmp.shape[0]} pulses are found in CH{i}")
-            timestamp_pulseheights.append(tmp)
+            timestamps.append(tmp)
+            tmp = f["pulse_heights"][:]
+            pulse_heights.append(tmp)
+            tmp = f["voltage_pulses"][:]
+            voltage_pulses.append(tmp)
 
     # sort the events by timestamp
     events = []
     for i in range(5):
-        for j in range(timestamp_pulseheights[i].shape[0]):
-            events.append(Pulse(timestamp_pulseheights[i][j, 0], i, j, timestamp_pulseheights[i][j, 1]))
+        for j in range(timestamps[i].shape[0]):
+            events.append(Pulse(timestamps[i][j], i, j, pulse_heights[i][j]))
     events.sort()
 
     # Find the coincidence
-    TIME_WINDOW = 500 # ns
-    PH_THRESHOLD = 0.05 # V
     coincidences = get_coincidence(events)
     print(len(coincidences))
-    # # save the coincidences in a csv file
-    # with open("output/coincidences.csv", "w") as f:
-    #     f.write("t0,t1,t2,t3,t4 (unit:ps)\n")
-    #     for coincidence in coincidences:
-    #         f.write(",".join([f"{int(pulse.time*1000)}" for pulse in coincidence]))
-    #         f.write("\n")
-    # print(f"Done! {len(coincidences)} coincidences are found.")
+
+    conicident_events_timestamps = []
+    coincident_event_pulse_heights = []
+    coincident_event_voltage_pulses = []
+    for coincidence in coincidences:
+        conicident_events_timestamps.append([pulse.time*1000 for pulse in coincidence]) # ns to ps
+        coincident_event_pulse_heights.append([pulse.pulse_height for pulse in coincidence])
+        coincident_event_voltage_pulses.append([voltage_pulses[pulse.channel][pulse.index] for pulse in coincidence])
+    
+    # to np array
+    conicident_events_timestamps = np.array(conicident_events_timestamps, dtype=int)
+    coincident_event_pulse_heights = np.array(coincident_event_pulse_heights)
+    coincident_event_voltage_pulses = np.array(coincident_event_voltage_pulses)
+    coincident_event_pulse_integrals = np.sum(coincident_event_voltage_pulses, axis=2) # integrate the pulses
+    
+    # save to h5 file
+    with h5py.File(output_dir + "/coincidences.h5", "w") as f:
+        f.create_dataset("timestamps", data=conicident_events_timestamps)
+        f.create_dataset("pulse_heights", data=coincident_event_pulse_heights)
+        f.create_dataset("voltage_pulses", data=coincident_event_voltage_pulses)
+        f.create_dataset("pulse_integrals", data=coincident_event_pulse_integrals)
+
+    print("Data saved to coincidences.h5")
