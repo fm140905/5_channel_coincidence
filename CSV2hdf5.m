@@ -9,9 +9,9 @@ close all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters. Modify these parameters according to your needs.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-input_dir = 'test/testdata/'
-CSV_file_name_pattern = 'DataR_CH_channel_number_@DT5730S_30718_run4.CSV'
-POLARITY = -1
+input_dir = 'C:/Users/ming/Downloads/1m_Cf252center_10MAY24_550LSB_CFD_run2/RAW/'; % 'test/testdata/'
+CSV_file_name_pattern = 'DataR_CH_{channel_number}_@DT5730S_30718_1m_Cf252center_10MAY24_CFD_run2.CSV'; % 'DataR_CH_{channel_number}_@DT5730S_30718_run4.CSV'
+POLARITY = 1 % -1
 DC_OFFSET = 0.2
 PH_THRESHOLD = 0.05 % V, discard pulses with height less than this value
 VMAX = 2.0;
@@ -25,10 +25,11 @@ if POLARITY == -1
 end
 
 for channel_number = 0:4
-    fpath = strcat(input_dir, strrep(CSV_file_name_pattern, '_channel_number_', num2str(channel_number)));
+    fpath = strcat(input_dir, strrep(CSV_file_name_pattern, '_{channel_number}_', num2str(channel_number)));
+    disp(['Reading data from ', fpath]);
     fid = fopen(fpath);
     header = fgetl(fid);
-    disp(header);
+    % disp(header);
     second_line = fgetl(fid);
     sub_strs = strsplit(second_line, ';');
     num_of_samples = length(sub_strs) - 7;
@@ -47,7 +48,7 @@ for channel_number = 0:4
     histogram(pulseHeights, 300, 'BinLimits', [0 0.5]);
     xlabel('Pulse height (V)');
     ylabel('Counts');
-    title('Pulse height distribution');
+    title(['CH ', num2str(channel_number), ' pulse height distribution']);
     grid on;
 
     % Plot some voltage pulses
@@ -60,7 +61,7 @@ for channel_number = 0:4
     hold off;
     xlabel('Sample number');
     ylabel('Voltage(V)');
-    title('Voltage Pulses');
+    title(['CH ', num2str(channel_number),' pulses']);
     grid on;
 
     % Save the data to hdf5 file
