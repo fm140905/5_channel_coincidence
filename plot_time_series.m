@@ -22,7 +22,9 @@ hold off;
 
 function time_series = create_time_series(pulses, time_stamps)
     start_time = min(time_stamps);
-    shift_samples = floor((time_stamps - start_time) / 2000);
+    disp(strcat('First trigger at: ', string(start_time), ' ps'));
+    disp(strcat('Triggering time of 5 channels with repspect to the first trigger: ', num2str((time_stamps - start_time)), ' ps'));
+    shift_samples = floor((time_stamps - start_time) / 2000); % 2000 ps is the sampling step
     time_series_length = max(shift_samples) + size(pulses, 2);
 
     time_series = zeros(size(pulses, 1), time_series_length);
