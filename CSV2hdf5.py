@@ -16,9 +16,10 @@ if __name__ == '__main__':
 
     NBITS = 14
     LSB_2_VOLT = VMAX / (2**NBITS - 1)
-    BASE_LINE = int(DC_OFFSET*(2**NBITS-1))
-    if POLARITY == -1:
-        BASE_LINE = int((1-DC_OFFSET)*(2**NBITS-1))
+    N_BASELINE_SAMPLES = 8
+    # BASE_LINE = int(DC_OFFSET*(2**NBITS-1))
+    # if POLARITY == -1:
+    #     BASE_LINE = int((1-DC_OFFSET)*(2**NBITS-1))
         
 
     for channel_number in range(5):
@@ -40,7 +41,10 @@ if __name__ == '__main__':
         print("Max time stamp (s): ", time_stamp[-1]/1e9)
 
         samples = raw_data[:,1:]
-        voltagePulses = LSB_2_VOLT * (samples - BASE_LINE) * POLARITY
+        # BASE_LINE = np.mean(samples, axis=1)
+        # baseline is the average of the first 8 samples
+        BASE_LINE = np.mean(samples[:, :N_BASELINE_SAMPLES], axis=1)
+        voltagePulses = LSB_2_VOLT * (samples - BASE_LINE[:, np.newaxis]) * POLARITY
         pulseHeights = np.max(voltagePulses, axis=1)
 
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))

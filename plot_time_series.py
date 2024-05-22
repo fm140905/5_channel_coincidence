@@ -26,18 +26,28 @@ def create_time_series(pulses, time_stamps):
 
 
 if __name__ == "__main__":
-    coincidence_index = 1
     # Load the data
     with h5py.File("test/coincidences.h5", "r") as f:
         coincident_pulses = f["voltage_pulses"][:]
         time_stamps = f["time_stamps"][:]
 
-    # Plot the data
-    fig, ax = plt.subplots()
-    time_series = create_time_series(coincident_pulses[coincidence_index], time_stamps[coincidence_index])
-    for i in range(5):
-        ax.plot(2*np.arange(time_series.shape[1]), time_series[i], label=f"Channel {i}")
-    ax.set_xlabel("Time (ns)")
-    ax.set_ylabel("Voltage (V)")
-    ax.legend()
-    plt.show()
+    # coincidence_index = 1
+    # # Plot the data
+    # fig, ax = plt.subplots()
+    # time_series = create_time_series(coincident_pulses[coincidence_index], time_stamps[coincidence_index])
+    # for i in range(5):
+    #     ax.plot(2*np.arange(time_series.shape[1]), time_series[i], label=f"Channel {i}")
+    # ax.set_xlabel("Time (ns)")
+    # ax.set_ylabel("Voltage (V)")
+    # ax.legend()
+    # plt.show()
+    for coincidence_index in range(20):
+        # Plot the data
+        fig, ax = plt.subplots()
+        time_series = create_time_series(coincident_pulses[coincidence_index], time_stamps[coincidence_index])
+        for i in range(5):
+            ax.plot(2*np.arange(time_series.shape[1]), time_series[i], label=f"Channel {i}")
+        ax.set_xlabel("Time (ns)")
+        ax.set_ylabel("Voltage (V)")
+        ax.legend()
+        plt.show()

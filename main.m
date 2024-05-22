@@ -9,10 +9,10 @@ close all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Change these parameters based on your measured data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-input_dir = 'C:\Users\ming\Downloads\1m_Cf252center_10MAY24_550LSB_CFD_run2\RAW\'; %"test/testdata/"
+input_dir = '/media/ming/Elements/1m_Cf252center_10MAY24_550LSB_CFD_run2/RAW/';
 output_dir = "test/";
-H5_file_name_pattern = 'DataR_CH_{channel_number}_@DT5730S_30718_1m_Cf252center_10MAY24_CFD_run2.h5'; %"DataR_CH_{channel_number}_@DT5730S_30718_run4.h5"
-TIME_WINDOW = 30 % 500 % ns
+H5_file_name_pattern = 'DataR_CH_{channel_number}_@DT5730S_30718_1m_Cf252center_10MAY24_CFD_run2.h5'; 
+TIME_WINDOW = 30 % ns
 PH_THRESHOLD = 0.05 % V
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

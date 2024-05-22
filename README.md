@@ -4,7 +4,7 @@
 
 Channel 0 is set as the trigger channel. Say there is an event at time `t_0` in channel 0. If there are four other events from channel 1-4 (one event per channel) in the time window (`t_0-w`, `t_0+w`) and the pulse heights of these four events are all above a certain threshold `h`, then these five events are selected and saved as a conicidence.
 
-`w` is set to 500 ns and can be changed by changing the value of parameter `TIME_WINDOW`
+`w` is set to 30 ns and can be changed by changing the value of parameter `TIME_WINDOW`
 
 `h` is set to 0.05 V and can be changed by changing the value of parameter `PH_THRESHOLD`
 
