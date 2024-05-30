@@ -54,6 +54,7 @@ for channel_number = 0:4
 
     for i=1:length(pulseHeights)
         time_stamp(i) = time_stamp(i) + CFD_TIMER.get_CFD_timing(voltagePulses(i, :));
+    end
 
     % Plot pulse height distribution
     figure;

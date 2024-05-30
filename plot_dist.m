@@ -1,16 +1,16 @@
 % Load the data from the HDF5 file
 filename = 'test/coincidences.h5';
 pulse_integrals = h5read(filename, '/pulse_integrals');
-time_stamps = h5read(filename, '/time_stamps');
+time_stamps_ps = h5read(filename, '/time_stamps');
 
 % Convert time stamps from ps to ns
-time_stamps = time_stamps / 1e3; % ps to ns
+time_stamps = cast(time_stamps_ps,"double") / 1e3; % ps to ns
 
 % Calculate time differences
-dts_1 = time_stamps(:, 2) - time_stamps(:, 1);
-dts_2 = time_stamps(:, 3) - time_stamps(:, 1);
-dts_3 = time_stamps(:, 4) - time_stamps(:, 1);
-dts_4 = time_stamps(:, 5) - time_stamps(:, 1);
+dts_1 = time_stamps(2,:) - time_stamps(1,:);
+dts_2 = time_stamps(3,:) - time_stamps(1,:);
+dts_3 = time_stamps(4,:) - time_stamps(1,:);
+dts_4 = time_stamps(5,:) - time_stamps(1,:);
 
 % Create histograms
 figure;
