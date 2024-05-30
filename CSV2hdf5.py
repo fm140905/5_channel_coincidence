@@ -1,22 +1,27 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import h5py
+from DIACFD import DIACFD
 
 
 if __name__ == '__main__':
     ################################################################
     #### Change the following parameters if needed ####
-    input_dir = "/media/ming/Elements/1m_Cf252center_10MAY24_550LSB_CFD_run2/RAW/"
-    CSV_file_name_pattern = "DataR_CH_channel_number_@DT5730S_30718_1m_Cf252center_10MAY24_CFD_run2.CSV"
+    input_dir = "/media/ming/Elements/LgModCf252_EXTTRIG_28MAY24/RAW/"
+    CSV_file_name_pattern = "DataR_CH_channel_number_@DT5730S_30718_LgModCf252_EXTTRIG_28MAY24.CSV"
     PH_THRESHOLD = 0.05 # V, discard pulses with height less than this value
     POLARITY = 1
     DC_OFFSET = 0.2
     VMAX = 2.0 # V
+    # CFD settings
+    FRACTION = 0.75
+    DELAY = 20 # ns
     ################################################################
 
     NBITS = 14
     LSB_2_VOLT = VMAX / (2**NBITS - 1)
     N_BASELINE_SAMPLES = 8
+    CFD_TIMER = DIACFD(FRACTION, DELAY)
     # BASE_LINE = int(DC_OFFSET*(2**NBITS-1))
     # if POLARITY == -1:
     #     BASE_LINE = int((1-DC_OFFSET)*(2**NBITS-1))
@@ -46,6 +51,11 @@ if __name__ == '__main__':
         BASE_LINE = np.mean(samples[:, :N_BASELINE_SAMPLES], axis=1)
         voltagePulses = LSB_2_VOLT * (samples - BASE_LINE[:, np.newaxis]) * POLARITY
         pulseHeights = np.max(voltagePulses, axis=1)
+        
+        # print(time_stamp.shape)
+        for i in range(time_stamp.shape[0]):
+            t = CFD_TIMER.get_CFD_timing(voltagePulses[i])
+            time_stamp[i] += t
 
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))
         ax.hist(pulseHeights, bins=300, range=(0, 0.5))
@@ -57,9 +67,11 @@ if __name__ == '__main__':
         indices = np.where(pulseHeights > PH_THRESHOLD)[0]
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))
         for i in range(10):
-            ax.plot(voltagePulses[indices[-i]])
+            # ax.plot(voltagePulses[indices[-i]])
+            ax.plot(samples[indices[-i]])
         ax.set_xlabel('Sample number')
-        ax.set_ylabel('Voltage(V)')
+        # ax.set_ylabel('Voltage(V)')
+        ax.set_ylabel('ADC')
         ax.grid(True)
         # ax.legend()
         plt.show()

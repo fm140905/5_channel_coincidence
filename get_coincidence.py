@@ -76,8 +76,8 @@ def get_coincidence(lst):
 if __name__ == '__main__':
     ################################################################
     #### Change the following parameters if needed ####
-    input_dir = "/media/ming/Elements/1m_Cf252center_10MAY24_550LSB_CFD_run2/RAW/"
-    H5_file_name_pattern = "DataR_CH_channel_number_@DT5730S_30718_1m_Cf252center_10MAY24_CFD_run2.h5"
+    input_dir = "/media/ming/Elements/LgModCf252_EXTTRIG_28MAY24/RAW/"
+    H5_file_name_pattern = "DataR_CH_channel_number_@DT5730S_30718_LgModCf252_EXTTRIG_28MAY24.h5"
     output_dir = "test"
     TIME_WINDOW = 30 # ns
     PH_THRESHOLD = 0.05 # V

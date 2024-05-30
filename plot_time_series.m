@@ -38,16 +38,17 @@ for coincidence_index = 1:20
 end
 
 function time_series = create_time_series(pulses, time_stamps)
-    start_time = min(time_stamps);
-    disp(strcat('First trigger at: ', string(start_time), ' ps'));
-    disp(strcat('Triggering time of 5 channels with repspect to the first trigger: ', num2str((time_stamps - start_time)), ' ps'));
-    shift_samples = floor((time_stamps - start_time) / 2000); % 2000 ps is the sampling step
-    time_series_length = max(shift_samples) + size(pulses, 2);
+    % start_time = min(time_stamps);
+    % disp(strcat('First trigger at: ', string(start_time), ' ps'));
+    % disp(strcat('Triggering time of 5 channels with repspect to the first trigger: ', num2str((time_stamps - start_time)), ' ps'));
+    % shift_samples = floor((time_stamps - start_time) / 2000); % 2000 ps is the sampling step
+    % time_series_length = max(shift_samples) + size(pulses, 2);
 
-    time_series = zeros(size(pulses, 1), time_series_length);
-    for i = 1:size(pulses, 1)
-        time_series(i, 1:shift_samples(i)) = pulses(i, 1);
-        time_series(i, shift_samples(i)+1:shift_samples(i)+size(pulses, 2)) = pulses(i, :);
-        time_series(i, shift_samples(i)+size(pulses, 2)+1:end) = pulses(i, end);
-    end
+    % time_series = zeros(size(pulses, 1), time_series_length);
+    % for i = 1:size(pulses, 1)
+    %     time_series(i, 1:shift_samples(i)) = pulses(i, 1);
+    %     time_series(i, shift_samples(i)+1:shift_samples(i)+size(pulses, 2)) = pulses(i, :);
+    %     time_series(i, shift_samples(i)+size(pulses, 2)+1:end) = pulses(i, end);
+    % end
+    time_series = pulses;
 end
