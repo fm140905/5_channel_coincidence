@@ -19,6 +19,9 @@ VMAX = 2.0;
 % CFD settings
 FRACTION = 0.75;
 DELAY = 20; % ns
+
+% downsample the pulses by a factor of 2
+DOWNSAMPLE_FACTOR = 2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NBITS = 14;
@@ -50,10 +53,15 @@ for channel_number = 0:4
     % voltagePulses = LSB_2_VOLT * (samples - BASE_LINE) * POLARITY;
     BASE_LINE = mean(samples(:, 1:N_BASELINE_SAMPLES), 2);
     voltagePulses = LSB_2_VOLT * (samples - BASE_LINE) * POLARITY;
+    % print size of voltagePulses
+    disp(['Size of voltagePulses: ', num2str(size(voltagePulses))]);
+    voltagePulses = voltagePulses(:, 1:DOWNSAMPLE_FACTOR:end);
+    % print size of voltagePulses
+    disp(['Size of voltagePulses after downsampling: ', num2str(size(voltagePulses))]);
     pulseHeights = max(voltagePulses, [], 2);
 
     for i=1:length(pulseHeights)
-        time_stamp(i) = time_stamp(i) + CFD_TIMER.get_CFD_timing(voltagePulses(i, :));
+        time_stamp(i) = time_stamp(i) + CFD_TIMER.get_CFD_timing(voltagePulses(i, :))*2*DOWNSAMPLE_FACTOR;
     end
 
     % Plot pulse height distribution

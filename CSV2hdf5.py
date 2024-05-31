@@ -16,6 +16,8 @@ if __name__ == '__main__':
     # CFD settings
     FRACTION = 0.75
     DELAY = 20 # ns
+    # downsample the pulses by a factor of 2
+    DOWNSAMPLE_FACTOR = 2
     ################################################################
 
     NBITS = 14
@@ -50,12 +52,13 @@ if __name__ == '__main__':
         # baseline is the average of the first 8 samples
         BASE_LINE = np.mean(samples[:, :N_BASELINE_SAMPLES], axis=1)
         voltagePulses = LSB_2_VOLT * (samples - BASE_LINE[:, np.newaxis]) * POLARITY
+        voltagePulses = voltagePulses[:,::DOWNSAMPLE_FACTOR]
         pulseHeights = np.max(voltagePulses, axis=1)
         
         # print(time_stamp.shape)
         for i in range(time_stamp.shape[0]):
             t = CFD_TIMER.get_CFD_timing(voltagePulses[i])
-            time_stamp[i] += t
+            time_stamp[i] += t*2*DOWNSAMPLE_FACTOR
 
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))
         ax.hist(pulseHeights, bins=300, range=(0, 0.5))
@@ -67,10 +70,10 @@ if __name__ == '__main__':
         indices = np.where(pulseHeights > PH_THRESHOLD)[0]
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))
         for i in range(10):
-            # ax.plot(voltagePulses[indices[-i]])
-            ax.plot(samples[indices[-i]])
-        ax.set_xlabel('Sample number')
-        # ax.set_ylabel('Voltage(V)')
+            ax.plot(voltagePulses[indices[-i]])
+            # ax.plot(samples[indices[-i]])
+        # ax.set_xlabel('Sample number')
+        ax.set_ylabel('Voltage(V)')
         ax.set_ylabel('ADC')
         ax.grid(True)
         # ax.legend()

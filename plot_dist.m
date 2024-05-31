@@ -29,8 +29,8 @@ xs = dts_2 - dts_1;
 ys = dts_4 - dts_3;
 
 figure;
-scatter(xs(1:10000), ys(1:10000), 1, 'filled');
-xlabel('dts_2 - dts_1 (ns)');
-ylabel('dts_4 - dts_3 (ns)');
+scatter(xs, ys, 1, 'filled');
+xlabel('t_2 - t_1 (ns)');
+ylabel('t_4 - t_3 (ns)');
 title('Scatter plot of time differences');
 grid on;
