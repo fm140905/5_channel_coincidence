@@ -23,7 +23,7 @@ if __name__ == '__main__':
     NBITS = 14
     LSB_2_VOLT = VMAX / (2**NBITS - 1)
     N_BASELINE_SAMPLES = 8
-    CFD_TIMER = DIACFD(FRACTION, DELAY)
+    CFD_TIMER = DIACFD(FRACTION, DELAY, num_interp_pts=8)
     # BASE_LINE = int(DC_OFFSET*(2**NBITS-1))
     # if POLARITY == -1:
     #     BASE_LINE = int((1-DC_OFFSET)*(2**NBITS-1))
@@ -42,7 +42,7 @@ if __name__ == '__main__':
         # insert 2 to the beginning of the use_columns
         use_columns = np.insert(use_columns, 0, 2)
         # read the whole file
-        raw_data = np.loadtxt(fpath, skiprows=1, usecols=use_columns, delimiter=";") #, max_rows=10001)
+        raw_data = np.loadtxt(fpath, skiprows=1, usecols=use_columns, delimiter=";")#, max_rows=10000)
         print("Number of pulses: ", raw_data.shape[0])
         time_stamp = raw_data[:, 0]/1e3 # ps to ns
         print("Max time stamp (s): ", time_stamp[-1]/1e9)
